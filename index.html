@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sailor Tales — Vêtements nés à Saint-Lunaire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Bricolage+Grotesque:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1c3557;--navy2:#2C4A7A;--navy3:#223E68;
+  --cream:#F1EBE0;--cream2:#e8e1d6;--sand:#b8a990;
+  --white:#fff;--black:#111;--gray-bg:#f2f1ef;
+  --fd:'Cormorant Garamond',serif;--fb:'Bricolage Grotesque',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--white);color:var(--black);overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 3rem;background:rgba(13,13,20,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06);transition:background .4s}
+nav.light-nav{background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,0,0,.07)}
+.nav-left{display:flex;gap:2.5rem;list-style:none}
+.nav-left a{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(241,235,224,.7);text-decoration:none;transition:color .2s}
+nav.light-nav .nav-left a{color:#666}
+.nav-left a:hover{color:var(--cream)}
+nav.light-nav .nav-left a:hover{color:var(--navy)}
+.nav-logo{font-family:var(--fd);font-size:1.4rem;font-weight:400;letter-spacing:.05em;text-decoration:none;color:var(--cream);position:absolute;left:50%;transform:translateX(-50%);transition:color .4s}
+nav.light-nav .nav-logo{color:var(--black)}
+.nav-right{display:flex;align-items:center;gap:1.5rem}
+.nav-icon-btn{background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:.4rem;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(241,235,224,.7);transition:color .2s;position:relative}
+nav.light-nav .nav-icon-btn{color:#666}
+.nav-icon-btn:hover{color:var(--cream)}
+nav.light-nav .nav-icon-btn:hover{color:var(--navy)}
+.cart-count{position:absolute;top:-6px;right:-8px;width:16px;height:16px;border-radius:50%;background:var(--cream);color:var(--navy);font-size:.6rem;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;font-weight:600}
+.cart-count.visible{opacity:1}
+
+/* PAGES */
+.page{display:none}.page.active{display:block}
+
+/* ═══ HERO ═══ */
+.hero{height:100vh;background:#0d0f18;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;padding:2rem}
+.hero-glow{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 60%, rgba(44,74,122,.22) 0%,transparent 70%);pointer-events:none}
+.hero-logo-img{width:clamp(55px,7vw,85px);filter:brightness(0) invert(1);opacity:.75;margin-bottom:2rem;animation:fadeUp .9s .2s both}
+.hero-title{font-family:var(--fd);font-size:clamp(5rem,13vw,12rem);font-weight:300;line-height:.9;letter-spacing:-.01em;animation:fadeUp .9s .4s both}
+.hero-title .line1{font-style:italic;color:var(--cream);display:block}
+.hero-title .line2{font-style:normal;color:var(--sand);display:block}
+.hero-sub{font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(241,235,224,.4);margin-top:1.75rem;animation:fadeUp .9s .6s both}
+.hero-cta{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;text-decoration:none;animation:fadeUp .9s .9s both}
+.hero-cta span{font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(241,235,224,.35)}
+.hero-cta-line{width:1px;height:36px;background:linear-gradient(to bottom,rgba(241,235,224,.35),transparent);animation:lineDown 2s 1.5s ease-in-out infinite}
+@keyframes lineDown{0%,100%{transform:scaleY(1);opacity:.35}50%{transform:scaleY(.5);opacity:.1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+/* TICKER */
+.ticker{background:var(--navy2);padding:.65rem 0;overflow:hidden}
+.ticker-inner{display:flex;white-space:nowrap;animation:ticker 28s linear infinite}
+.ticker-inner span{font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;color:var(--cream);padding:0 2rem;opacity:.85}
+.ticker-inner .dot{color:var(--sand);padding:0;opacity:1}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* COLLECTION */
+.section-collection{padding:5rem 3rem 4rem}
+.collection-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(0,0,0,.08)}
+.collection-title{font-family:var(--fd);font-size:1.1rem;font-weight:400;letter-spacing:.06em;color:var(--black)}
+.collection-count{font-size:.7rem;letter-spacing:.1em;color:#aaa}
+.products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+.product-card{cursor:pointer}
+.product-card-img{position:relative;overflow:hidden;background:var(--gray-bg);aspect-ratio:3/4;display:flex;align-items:center;justify-content:center}
+.product-card-img img{width:88%;height:88%;object-fit:contain;object-position:center;display:block;filter:drop-shadow(0 12px 32px rgba(0,0,0,.18)) drop-shadow(0 4px 10px rgba(0,0,0,.12));transition:transform .6s cubic-bezier(.25,.46,.45,.94)}
+.product-card:hover .product-card-img img{transform:scale(1.04) translateY(-4px)}
+.product-card-badge{position:absolute;top:.75rem;left:.75rem;background:var(--black);color:var(--white);font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;padding:.25rem .65rem;font-weight:500}
+.product-card-info{padding:.9rem .1rem;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
+.product-card-name{font-size:.82rem;letter-spacing:.04em;color:var(--black);text-transform:uppercase;font-weight:400}
+.product-card-meta{font-size:.68rem;color:#aaa;margin-top:.2rem;letter-spacing:.04em}
+.product-card-price{font-size:.82rem;color:var(--black);white-space:nowrap}
+
+/* HISTOIRE */
+.section-histoire{display:grid;grid-template-columns:1fr 1fr;min-height:580px}
+.histoire-left{background:linear-gradient(135deg,#0d1a2e 0%,#1c3557 60%,#2C4A7A 100%);display:flex;align-items:center;justify-content:center;padding:5rem 4rem;position:relative;overflow:hidden}
+.histoire-logo-bg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:75%;opacity:.07;filter:brightness(0) invert(1)}
+.histoire-quote{font-family:var(--fd);font-size:clamp(1.5rem,2.5vw,2.5rem);font-weight:300;font-style:italic;color:var(--cream);line-height:1.35;text-align:center;position:relative;z-index:1}
+.histoire-quote::before{content:'\201C';display:block;font-size:5rem;line-height:.4;color:var(--sand);opacity:.4;margin-bottom:1.2rem}
+.histoire-right{background:var(--cream);padding:5rem 4.5rem;display:flex;flex-direction:column;justify-content:center;gap:1.5rem}
+.histoire-label{font-size:.68rem;letter-spacing:.25em;text-transform:uppercase;color:var(--sand)}
+.histoire-title{font-family:var(--fd);font-size:clamp(1.8rem,2.5vw,2.6rem);font-weight:300;color:var(--navy);line-height:1.15}
+.histoire-title em{font-style:italic}
+.histoire-body{font-size:.88rem;line-height:1.9;color:#666;max-width:400px}
+.histoire-stats{display:flex;gap:2.5rem;padding-top:1.75rem;border-top:1px solid rgba(0,0,0,.1);margin-top:.25rem}
+.stat{display:flex;flex-direction:column;gap:.3rem}
+.stat-label{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--sand)}
+.stat-val{font-family:var(--fd);font-size:1.1rem;color:var(--navy)}
+
+/* NEWSLETTER */
+.section-nl{padding:5.5rem 3rem;background:var(--navy);text-align:center}
+.nl-title{font-family:var(--fd);font-size:clamp(1.8rem,3vw,2.6rem);font-weight:300;color:var(--cream);margin-bottom:.6rem}
+.nl-sub{font-family:var(--fd);font-style:italic;font-size:1rem;color:var(--sand);margin-bottom:2.5rem;opacity:.8}
+.nl-form{display:flex;max-width:440px;margin:0 auto}
+.nl-form input{flex:1;padding:.95rem 1.25rem;border:1px solid rgba(241,235,224,.2);border-right:none;background:rgba(255,255,255,.06);font-family:var(--fb);font-size:.85rem;color:var(--cream);outline:none;transition:border-color .2s}
+.nl-form input:focus{border-color:rgba(241,235,224,.5)}
+.nl-form input::placeholder{color:rgba(241,235,224,.3)}
+.nl-form button{padding:.95rem 1.75rem;background:var(--cream);color:var(--navy);border:none;font-family:var(--fb);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:background .25s;white-space:nowrap}
+.nl-form button:hover{background:var(--cream2)}
+.nl-success{display:none;font-family:var(--fd);font-style:italic;font-size:1.1rem;color:var(--sand);margin-top:1rem}
+
+/* PRODUCT PAGE */
+.product-back{display:inline-flex;align-items:center;gap:.5rem;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#777;padding:1.25rem 3rem;cursor:pointer;background:none;border:none;transition:color .2s;border-bottom:1px solid rgba(0,0,0,.07);width:100%;text-align:left;margin-top:60px}
+.product-back:hover{color:var(--navy)}
+.product-layout{display:grid;grid-template-columns:1fr 1fr;min-height:85vh}
+.product-imgs{background:var(--gray-bg);display:flex;align-items:center;justify-content:center;padding:3rem}
+.product-imgs img{max-width:80%;max-height:80vh;object-fit:contain;filter:drop-shadow(0 16px 40px rgba(0,0,0,.18)) drop-shadow(0 4px 12px rgba(0,0,0,.12))}
+.product-info{padding:4rem;display:flex;flex-direction:column;gap:1.4rem;border-left:1px solid rgba(0,0,0,.07);overflow-y:auto}
+.product-info-tome{font-size:.68rem;letter-spacing:.25em;text-transform:uppercase;color:var(--sand)}
+.product-info-name{font-family:var(--fd);font-size:clamp(2rem,3vw,3rem);font-weight:300;line-height:1.1;color:var(--navy)}
+.product-info-name em{font-style:italic}
+.product-info-price{font-family:var(--fd);font-size:1.6rem;color:var(--black);font-weight:300}
+.product-divider{border:none;border-top:1px solid rgba(0,0,0,.08)}
+.product-poem{font-family:var(--fd);font-style:italic;font-size:1rem;line-height:1.8;color:#666;border-left:2px solid var(--sand);padding-left:1.25rem}
+.product-eco{background:var(--gray-bg);padding:1rem 1.25rem;border-left:3px solid var(--navy2)}
+.product-eco-title{font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--navy2);margin-bottom:.5rem;font-weight:500}
+.product-eco p{font-size:.8rem;line-height:1.75;color:#555}
+.size-label{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:#888;margin-bottom:.75rem;display:block}
+.size-options{display:flex;gap:.5rem;flex-wrap:wrap}
+.size-btn{width:48px;height:48px;border:1px solid rgba(0,0,0,.15);background:none;font-family:var(--fb);font-size:.78rem;cursor:pointer;transition:border-color .2s,background .2s,color .2s;color:var(--black)}
+.size-btn:hover{border-color:var(--navy);color:var(--navy)}
+.size-btn.selected{background:var(--navy);color:var(--white);border-color:var(--navy)}
+.size-error{font-size:.75rem;color:#c0392b;display:none;margin-top:.5rem}
+.add-to-cart-btn{width:100%;padding:1.1rem;background:var(--navy);color:var(--white);border:none;font-family:var(--fb);font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:background .25s}
+.add-to-cart-btn:hover{background:var(--navy2)}
+.details-block{border-top:1px solid rgba(0,0,0,.08)}
+.details-toggle{width:100%;display:flex;justify-content:space-between;align-items:center;padding:1rem 0;background:none;border:none;cursor:pointer;font-family:var(--fb);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--black)}
+.details-toggle svg{transition:transform .3s}
+.details-toggle.open svg{transform:rotate(180deg)}
+.details-content{max-height:0;overflow:hidden;transition:max-height .35s ease;font-size:.82rem;line-height:1.9;color:#666}
+.details-content.open{max-height:300px}
+.details-content p{padding-bottom:1rem}
+
+/* CART DRAWER */
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:300;opacity:0;pointer-events:none;transition:opacity .3s}
+.cart-overlay.open{opacity:1;pointer-events:all}
+.cart-drawer{position:fixed;top:0;right:0;bottom:0;width:420px;max-width:100vw;background:var(--white);z-index:301;transform:translateX(100%);transition:transform .35s cubic-bezier(.25,.46,.45,.94);display:flex;flex-direction:column}
+.cart-drawer.open{transform:translateX(0)}
+.cart-header{display:flex;align-items:center;justify-content:space-between;padding:1.5rem 2rem;border-bottom:1px solid rgba(0,0,0,.08)}
+.cart-header h2{font-family:var(--fd);font-size:1.4rem;font-weight:400;color:var(--navy)}
+.cart-close{background:none;border:none;cursor:pointer;color:#888;padding:.25rem;transition:color .2s}
+.cart-close:hover{color:var(--black)}
+.cart-items{flex:1;overflow-y:auto;padding:1.5rem 2rem}
+.cart-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:1rem;color:#bbb;text-align:center}
+.cart-empty svg{opacity:.25}
+.cart-empty p{font-family:var(--fd);font-style:italic;font-size:1.05rem}
+.cart-item{display:grid;grid-template-columns:72px 1fr;gap:1rem;padding:1rem 0;border-bottom:1px solid rgba(0,0,0,.06)}
+.cart-item-img{background:var(--gray-bg);aspect-ratio:3/4;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:.25rem}
+.cart-item-img img{width:90%;height:90%;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.12))}
+.cart-item-name{font-size:.82rem;font-weight:500;color:var(--black);margin-bottom:.2rem}
+.cart-item-size{font-size:.7rem;color:#999;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.4rem}
+.cart-item-price{font-family:var(--fd);font-size:.95rem;color:var(--navy)}
+.cart-item-remove{background:none;border:none;cursor:pointer;color:#ccc;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;transition:color .2s;padding:0;margin-top:.35rem;display:block}
+.cart-item-remove:hover{color:#c0392b}
+.cart-footer{padding:1.5rem 2rem;border-top:1px solid rgba(0,0,0,.08)}
+.cart-total{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem}
+.cart-total-label{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#888}
+.cart-total-val{font-family:var(--fd);font-size:1.4rem;font-weight:400;color:var(--navy)}
+.btn-see-cart{display:block;width:100%;padding:.85rem;border:1px solid var(--navy);background:none;color:var(--navy);font-family:var(--fb);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:background .25s,color .25s;margin-bottom:.65rem;text-align:center;text-decoration:none}
+.btn-see-cart:hover{background:var(--navy);color:var(--white)}
+.checkout-btn{width:100%;padding:1.05rem;background:var(--navy);color:var(--white);border:none;font-family:var(--fb);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:background .25s;display:flex;align-items:center;justify-content:center;gap:.6rem}
+.checkout-btn:hover{background:var(--navy2)}
+.checkout-btn:disabled{background:#ccc;cursor:not-allowed}
+.checkout-note{font-size:.68rem;color:#bbb;margin-top:.65rem;line-height:1.6;font-style:italic;font-family:var(--fd);text-align:center}
+.checkout-spinner{display:none;width:13px;height:13px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* CART PAGE */
+.cart-page{padding-top:80px;min-height:100vh;background:var(--white)}
+.cart-page-inner{max-width:900px;margin:0 auto;padding:4rem 2rem}
+.cart-page-title{font-family:var(--fd);font-size:clamp(2rem,3vw,2.8rem);font-weight:300;color:var(--navy);margin-bottom:.5rem}
+.cart-page-sub{font-size:.78rem;color:#aaa;letter-spacing:.05em;margin-bottom:3rem}
+.cart-page-grid{display:grid;grid-template-columns:1fr 380px;gap:4rem;align-items:start}
+.cart-page-items{display:flex;flex-direction:column;gap:0}
+.cart-page-item{display:grid;grid-template-columns:100px 1fr auto;gap:1.5rem;padding:1.5rem 0;border-bottom:1px solid rgba(0,0,0,.07);align-items:center}
+.cart-page-item-img{background:var(--gray-bg);aspect-ratio:3/4;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:.5rem}
+.cart-page-item-img img{width:85%;height:85%;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.12))}
+.cart-page-item-name{font-size:.9rem;font-weight:500;text-transform:uppercase;letter-spacing:.03em;margin-bottom:.25rem}
+.cart-page-item-size{font-size:.72rem;color:#999;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem}
+.cart-page-item-price{font-family:var(--fd);font-size:1.1rem;color:var(--navy)}
+.cart-page-item-remove{background:none;border:none;cursor:pointer;color:#ccc;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;transition:color .2s;padding:0;white-space:nowrap}
+.cart-page-item-remove:hover{color:#c0392b}
+.cart-page-empty{text-align:center;padding:5rem 2rem;color:#bbb}
+.cart-page-empty p{font-family:var(--fd);font-style:italic;font-size:1.2rem;margin-bottom:1.5rem}
+.cart-page-empty a{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--navy);text-decoration:none;border-bottom:1px solid var(--navy);padding-bottom:.2rem}
+.cart-summary{background:var(--gray-bg);padding:2rem;position:sticky;top:100px}
+.cart-summary-title{font-family:var(--fd);font-size:1.2rem;font-weight:400;color:var(--navy);margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(0,0,0,.1)}
+.cart-summary-line{display:flex;justify-content:space-between;font-size:.82rem;color:#666;margin-bottom:.6rem}
+.cart-summary-total{display:flex;justify-content:space-between;align-items:center;padding-top:1rem;margin-top:.5rem;border-top:1px solid rgba(0,0,0,.1)}
+.cart-summary-total span:first-child{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#888}
+.cart-summary-total span:last-child{font-family:var(--fd);font-size:1.5rem;color:var(--navy)}
+.cart-summary-note{font-size:.72rem;color:#aaa;line-height:1.7;margin:1.25rem 0;font-style:italic;font-family:var(--fd)}
+.cart-checkout-btn{width:100%;padding:1.1rem;background:var(--navy);color:var(--white);border:none;font-family:var(--fb);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:background .25s;display:flex;align-items:center;justify-content:center;gap:.6rem}
+.cart-checkout-btn:hover{background:var(--navy2)}
+.cart-checkout-btn:disabled{background:#ccc;cursor:not-allowed}
+
+/* LEGAL PAGE */
+.legal-page{padding-top:80px;min-height:100vh}
+.legal-inner{max-width:720px;margin:0 auto;padding:5rem 2rem}
+.legal-back{display:inline-flex;align-items:center;gap:.5rem;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#777;cursor:pointer;background:none;border:none;margin-bottom:3rem;transition:color .2s;padding:0}
+.legal-back:hover{color:var(--navy)}
+.legal-title{font-family:var(--fd);font-size:2.5rem;font-weight:300;color:var(--navy);margin-bottom:2rem;line-height:1.1}
+.legal-body{font-size:.9rem;line-height:1.95;color:#444}
+.legal-body p{margin-bottom:1.2rem}
+.legal-body strong{color:var(--navy);font-weight:500}
+
+/* FOOTER */
+footer{background:var(--black);padding:4rem 3rem 2rem}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:2rem}
+.footer-logo{font-family:var(--fd);font-size:1.5rem;color:var(--cream);margin-bottom:.6rem}
+.footer-desc{font-size:.78rem;line-height:1.8;color:rgba(255,255,255,.3);max-width:220px;margin-bottom:1.25rem}
+.footer-socials{display:flex;gap:1.25rem}
+.footer-socials a{font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.3);text-decoration:none;transition:color .2s}
+.footer-socials a:hover{color:var(--cream)}
+.footer-col-title{font-size:.63rem;letter-spacing:.25em;text-transform:uppercase;color:var(--sand);opacity:.6;margin-bottom:1rem}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:.55rem}
+.footer-links a,.footer-links button{font-size:.78rem;color:rgba(255,255,255,.3);text-decoration:none;transition:color .2s;background:none;border:none;cursor:pointer;font-family:var(--fb);text-align:left;padding:0}
+.footer-links a:hover,.footer-links button:hover{color:var(--cream)}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center}
+.footer-copy{font-size:.68rem;color:rgba(255,255,255,.18)}
+.footer-secure{font-size:.68rem;color:rgba(255,255,255,.18)}
+
+/* TOAST */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--navy);color:var(--cream);padding:.9rem 2rem;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;z-index:400;transition:transform .35s cubic-bezier(.25,.46,.45,.94);white-space:nowrap;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  nav{padding:.9rem 1.25rem}
+  .nav-left{display:none}
+  .nav-logo{position:static;transform:none}
+  .section-collection{padding:4rem 1rem 3rem}
+  .products-grid{grid-template-columns:1fr 1fr;gap:1rem}
+  .section-histoire{grid-template-columns:1fr}
+  .histoire-left{min-height:320px;padding:4rem 2rem}
+  .histoire-right{padding:3.5rem 2rem}
+  .section-nl{padding:4rem 1.5rem}
+  .nl-form{flex-direction:column}
+  .nl-form input{border-right:1px solid rgba(241,235,224,.2);border-bottom:none}
+  .product-back{padding:1rem 1.5rem}
+  .product-layout{grid-template-columns:1fr}
+  .product-info{padding:2rem 1.5rem;border-left:none}
+  .cart-drawer{width:100vw}
+  .cart-page-grid{grid-template-columns:1fr}
+  .cart-page-inner{padding:2.5rem 1.25rem}
+  footer{padding:3rem 1.5rem 1.5rem}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:2rem}
+  .footer-bottom{flex-direction:column;gap:.75rem;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <ul class="nav-left">
+    <li><a href="#" onclick="showPage('home');setTimeout(()=>document.getElementById('collection').scrollIntoView({behavior:'smooth'}),50);return false">Collection</a></li>
+    <li><a href="#" onclick="showPage('home');setTimeout(()=>document.getElementById('histoire').scrollIntoView({behavior:'smooth'}),50);return false">Histoire</a></li>
+    <li><a href="https://www.instagram.com/sailor.tales/" target="_blank">Instagram</a></li>
+  </ul>
+  <a href="#" class="nav-logo" onclick="showPage('home');window.scrollTo(0,0);return false">Sailor Tales</a>
+  <div class="nav-right">
+    <button class="nav-icon-btn" onclick="showPage('cart')">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      Panier
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══════════════ PAGE HOME ═══════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-glow"></div>
+    <img src="images/logo.png" alt="Sailor Tales" class="hero-logo-img">
+    <h1 class="hero-title">
+      <span class="line1">Sailor</span>
+      <span class="line2">Tales</span>
+    </h1>
+    <p class="hero-sub">Saint-Lunaire, Bretagne &nbsp;·&nbsp; Tome I</p>
+    <a href="#" class="hero-cta" onclick="document.getElementById('collection').scrollIntoView({behavior:'smooth'});return false">
+      <span>Découvrir</span>
+      <div class="hero-cta-line"></div>
+    </a>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker">
+    <div class="ticker-inner">
+      <span>Précommandes ouvertes jusqu'au 15 juin</span><span class="dot"> ✦ </span>
+      <span>Livraison début juillet</span><span class="dot"> ✦ </span>
+      <span>Coton bio 100% certifié GOTS</span><span class="dot"> ✦ </span>
+      <span>Paiement sécurisé par Stripe</span><span class="dot"> ✦ </span>
+      <span>Fair Wear · PETA Approved Vegan</span><span class="dot"> ✦ </span>
+      <span>Précommandes ouvertes jusqu'au 15 juin</span><span class="dot"> ✦ </span>
+      <span>Livraison début juillet</span><span class="dot"> ✦ </span>
+      <span>Coton bio 100% certifié GOTS</span><span class="dot"> ✦ </span>
+      <span>Paiement sécurisé par Stripe</span><span class="dot"> ✦ </span>
+      <span>Fair Wear · PETA Approved Vegan</span><span class="dot"> ✦ </span>
+    </div>
+  </div>
+
+  <!-- COLLECTION -->
+  <section class="section-collection" id="collection">
+    <div class="collection-header">
+      <h2 class="collection-title">Tome I — La Collection</h2>
+      <span class="collection-count">3 pièces</span>
+    </div>
+    <div class="products-grid" id="productsGrid"></div>
+  </section>
+
+  <!-- HISTOIRE -->
+  <section class="section-histoire" id="histoire">
+    <div class="histoire-left">
+      <img src="images/logo.png" alt="" class="histoire-logo-bg">
+      <blockquote class="histoire-quote">
+        Nés à Saint-Lunaire,<br>au bord du grand bleu.
+      </blockquote>
+    </div>
+    <div class="histoire-right">
+      <p class="histoire-label">Notre histoire</p>
+      <h2 class="histoire-title">Des <em>histoires de marins</em><br>cousues dans le tissu.</h2>
+      <p class="histoire-body">Sailor Tales est née d'une envie simple : porter des histoires. Pas des logos, pas des slogans mais des récits. Chaque pièce de la collection est une page, chaque dessin une scène, chaque texte un fragment de mémoire bretonne.</p>
+      <p class="histoire-body">La première collection raconte l'été, le sel, les fins de soirée face à l'horizon. Des silhouettes qui dansent, un marin qui joue aux cartes avec un requin, un dernier verre que personne ne veut finir.</p>
+      <div class="histoire-stats">
+        <div class="stat"><span class="stat-label">Origine</span><span class="stat-val">Saint-Lunaire</span></div>
+        <div class="stat"><span class="stat-label">Collection</span><span class="stat-val">Tome I</span></div>
+        <div class="stat"><span class="stat-label">Matière</span><span class="stat-val">Coton bio GOTS</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="section-nl">
+    <h3 class="nl-title">Rester dans la boucle</h3>
+    <p class="nl-sub">Nouveaux chapitres, restockages, histoires inédites.</p>
+    <form class="nl-form" name="newsletter" netlify netlify-honeypot="bot-field" onsubmit="handleNewsletter(event)">
+      <input type="hidden" name="form-name" value="newsletter">
+      <input type="hidden" name="bot-field">
+      <input type="email" name="email" placeholder="ton@email.com" required>
+      <button type="submit">S'inscrire</button>
+    </form>
+    <p class="nl-success" id="nlSuccess">Merci ! Tu seras parmi les premiers informés.</p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <p class="footer-logo">Sailor Tales</p>
+        <p class="footer-desc">Vêtements nés à Saint-Lunaire. Histoires de marins, coton bio, petites séries.</p>
+        <div class="footer-socials">
+          <a href="https://www.instagram.com/sailor.tales/" target="_blank">Instagram</a>
+          <a href="https://www.tiktok.com/@sailortalesofficiel" target="_blank">TikTok</a>
+        </div>
+      </div>
+      <div>
+        <p class="footer-col-title">Collection</p>
+        <ul class="footer-links">
+          <li><a href="#" onclick="openProduct(0);return false">L'Aventure</a></li>
+          <li><a href="#" onclick="openProduct(1);return false">L'Apéro entre amis</a></li>
+          <li><a href="#" onclick="openProduct(2);return false">Le Dernier Verre</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-title">Infos</p>
+        <ul class="footer-links">
+          <li><button onclick="openLegal('livraison')">Livraison</button></li>
+          <li><button onclick="openLegal('retours')">Retours & remboursements</button></li>
+          <li><a href="mailto:chrls.pnrd@gmail.com">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-title">Légal</p>
+        <ul class="footer-links">
+          <li><button onclick="openLegal('confidentialite')">Confidentialité</button></li>
+          <li><button onclick="openLegal('cgv')">Conditions générales</button></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 Sailor Tales — Tous droits réservés</p>
+      <p class="footer-secure">🔒 Paiements sécurisés par Stripe</p>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ═══════════════ PAGE PRODUCT ═══════════════ -->
+<div class="page" id="page-product">
+  <button class="product-back" onclick="showPage('home')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    Retour à la collection
+  </button>
+  <div class="product-layout">
+    <div class="product-imgs"><img id="productImg" src="" alt=""></div>
+    <div class="product-info">
+      <p class="product-info-tome" id="productTome"></p>
+      <h1 class="product-info-name" id="productName"></h1>
+      <p class="product-info-price" id="productPrice"></p>
+      <hr class="product-divider">
+      <blockquote class="product-poem" id="productPoem"></blockquote>
+      <hr class="product-divider">
+      <div class="product-eco">
+        <p class="product-eco-title">Pourquoi ce coton ?</p>
+        <p id="productEco"></p>
+      </div>
+      <div>
+        <span class="size-label">Choisir une taille</span>
+        <div class="size-options" id="sizeOptions"></div>
+        <p class="size-error" id="sizeError">Veuillez choisir une taille.</p>
+      </div>
+      <button class="add-to-cart-btn" onclick="addToCart()">Ajouter au panier</button>
+      <div class="details-block">
+        <button class="details-toggle" onclick="toggleDetails(this)">Composition & détails<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="6 9 12 15 18 9"/></svg></button>
+        <div class="details-content"><p id="productDetails"></p></div>
+      </div>
+      <div class="details-block">
+        <button class="details-toggle" onclick="toggleDetails(this)">Livraison & retours<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="6 9 12 15 18 9"/></svg></button>
+        <div class="details-content"><p>Précommandes ouvertes jusqu'au 15 juin 2026. Livraison estimée début juillet. Frais de livraison inclus dans le prix. Retours uniquement en cas de défaut de fabrication.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PAGE CART ═══════════════ -->
+<div class="page" id="page-cart">
+  <div class="cart-page">
+    <div class="cart-page-inner">
+      <button class="legal-back" onclick="showPage('home')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Retour à la boutique
+      </button>
+      <h1 class="cart-page-title">Mon panier</h1>
+      <p class="cart-page-sub" id="cartPageSub"></p>
+      <div id="cartPageContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PAGE LEGAL ═══════════════ -->
+<div class="page" id="page-legal">
+  <div class="legal-inner">
+    <button class="legal-back" onclick="showPage('home')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Retour
+    </button>
+    <h1 class="legal-title" id="legalTitle"></h1>
+    <div class="legal-body" id="legalBody"></div>
+  </div>
+</div>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h2>Mon panier</h2>
+    <button class="cart-close" onclick="closeCart()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-total">
+      <span class="cart-total-label">Total</span>
+      <span class="cart-total-val" id="cartTotal">0,00 €</span>
+    </div>
+    <a class="btn-see-cart" href="#" onclick="closeCart();showPage('cart');return false">Voir mon panier</a>
+    <button class="checkout-btn" id="checkoutBtnDrawer" onclick="checkout('drawer')">
+      <div class="checkout-spinner" id="checkoutSpinnerDrawer"></div>
+      Commander — Paiement sécurisé
+    </button>
+    <p class="checkout-note">Ton adresse de livraison sera renseignée sur la page Stripe.</p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════
+// DONNÉES PRODUITS
+// ══════════════════════════════════════
+const ECO_TEXT = "Ce tee-shirt est fabriqué en coton cultivé sans pesticides ni engrais chimiques, certifié GOTS — le standard mondial le plus exigeant pour le textile biologique. Il est conçu dans des ateliers régulièrement audités par une organisation indépendante pour garantir des conditions de travail dignes et des salaires équitables. Parce qu'une belle histoire commence dès le fil.";
+
+const PRODUCTS = [
+  {
+    id:0, tome:'Tome I', name:"L'Aventure", nameHtml:"<em>L'Aventure</em>",
+    price:49, img:'images/aventure.png', color:'Blanc',
+    poem:"Un baiser qui n'a rien d'anodin, laissé par les femmes des matelots avant de prendre le large, trace fragile qui rend présent l'absent.",
+    details:"Tee-shirt manches longues blanc. 100% coton biologique certifié GOTS. Label Fair Wear Foundation. PETA Approved Vegan. Tailles XS / S / M / L / XL.",
+    eco: ECO_TEXT
+  },
+  {
+    id:1, tome:'Tome I', name:"L'Apéro entre amis", nameHtml:"<em>L'Apéro</em><br>entre amis",
+    price:49, img:'images/apero.png', color:'Blanc',
+    poem:"Le marin levait son verre face au requin, et la mer semblait sourire autour de leur étrange amitié. Entre les cartes froissées et le goût salé du soir, ils partageaient un apéro, indifférents au reste du monde...",
+    details:"Tee-shirt manches longues blanc. 100% coton biologique certifié GOTS. Label Fair Wear Foundation. PETA Approved Vegan. Tailles XS / S / M / L / XL.",
+    eco: ECO_TEXT
+  },
+  {
+    id:2, tome:'Tome I', name:"Le Dernier Verre", nameHtml:"<em>Le Dernier</em><br>Verre",
+    price:49, img:'images/dernier-verre.png', color:'Kaki',
+    poem:"L'été s'en allait par le bout de la plage. Ils l'ont regardé faire, sans rien dire. L'horizon méritait encore un verre.",
+    details:"Tee-shirt manches longues kaki. 100% coton biologique certifié GOTS. Label Fair Wear Foundation. PETA Approved Vegan. Tailles XS / S / M / L / XL.",
+    eco: ECO_TEXT
+  }
+];
+
+const SIZES = ['XS','S','M','L','XL'];
+
+const LEGAL = {
+  livraison: {
+    title: 'Livraison',
+    body: `<p>Les commandes sont expédiées en colissimo suivi à l'adresse indiquée lors de la commande. Les frais de livraison sont inclus dans le prix.</p><p>Sailor Tales fonctionne en précommande : les commandes passées entre le 1er et le 15 juin sont produites à partir du 16 juin. La livraison est estimée pour début juillet. Un email de confirmation avec numéro de suivi vous sera envoyé dès l'expédition.</p>`
+  },
+  retours: {
+    title: 'Retours & remboursements',
+    body: `<p>En raison du fonctionnement en précommande et de la production à la demande, les retours ne sont pas acceptés sauf en cas de défaut de fabrication avéré.</p><p>Si vous recevez un article défectueux, contactez-nous dans les 7 jours suivant la réception à l'adresse : <strong>chrls.pnrd@gmail.com</strong> — nous trouverons une solution.</p>`
+  },
+  confidentialite: {
+    title: 'Politique de confidentialité',
+    body: `<p>Les informations collectées lors de votre commande (nom, adresse, email) sont utilisées uniquement pour le traitement et l'expédition de celle-ci. Elles ne sont jamais transmises à des tiers à des fins commerciales.</p><p>Conformément au RGPD, vous disposez d'un droit d'accès, de modification et de suppression de vos données. Pour toute demande : <strong>chrls.pnrd@gmail.com</strong></p>`
+  },
+  cgv: {
+    title: 'Conditions générales de vente',
+    body: `<p>Toute commande passée sur ce site vaut acceptation des présentes conditions. Les prix sont indiqués en euros toutes taxes comprises.</p><p>Sailor Tales se réserve le droit de modifier les délais de livraison en cas de force majeure, avec information préalable du client.</p><p>Les visuels et designs présents sur ce site sont la propriété exclusive de Sailor Tales et ne peuvent être reproduits sans autorisation.</p>`
+  }
+};
+
+// ══════════════════════════════════════
+// STATE
+// ══════════════════════════════════════
+let cart = [];
+let currentProduct = null;
+let selectedSize = null;
+
+// ══════════════════════════════════════
+// NAV SCROLL
+// ══════════════════════════════════════
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('nav');
+  if(document.getElementById('page-home').classList.contains('active')) {
+    const heroH = document.querySelector('.hero') ? document.querySelector('.hero').offsetHeight : 300;
+    nav.classList.toggle('light-nav', window.scrollY > heroH - 80);
+  }
+});
+
+// ══════════════════════════════════════
+// GRID
+// ══════════════════════════════════════
+function renderGrid() {
+  document.getElementById('productsGrid').innerHTML = PRODUCTS.map(p => `
+    <div class="product-card" onclick="openProduct(${p.id})">
+      <div class="product-card-img">
+        <img src="${p.img}" alt="${p.name}">
+        <span class="product-card-badge">Précommande</span>
+      </div>
+      <div class="product-card-info">
+        <div>
+          <p class="product-card-name">${p.name}</p>
+          <p class="product-card-meta">${p.tome} · ${p.color}</p>
+        </div>
+        <p class="product-card-price">${p.price},00 €</p>
+      </div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  window.scrollTo(0, 0);
+  const nav = document.getElementById('nav');
+  if(name === 'home') {
+    nav.classList.remove('light-nav');
+  } else {
+    nav.classList.add('light-nav');
+  }
+  if(name === 'cart') renderCartPage();
+}
+
+function openProduct(id) {
+  const p = PRODUCTS[id]; currentProduct = p; selectedSize = null;
+  document.getElementById('productImg').src = p.img;
+  document.getElementById('productTome').textContent = p.tome;
+  document.getElementById('productName').innerHTML = p.nameHtml;
+  document.getElementById('productPrice').textContent = p.price + ',00 €';
+  document.getElementById('productPoem').textContent = p.poem;
+  document.getElementById('productDetails').textContent = p.details;
+  document.getElementById('productEco').textContent = p.eco;
+  document.getElementById('sizeError').style.display = 'none';
+  document.getElementById('sizeOptions').innerHTML = SIZES.map(s =>
+    `<button class="size-btn" onclick="selectSize('${s}',this)">${s}</button>`).join('');
+  document.querySelectorAll('.details-toggle').forEach(t => t.classList.remove('open'));
+  document.querySelectorAll('.details-content').forEach(c => c.classList.remove('open'));
+  showPage('product');
+}
+
+function selectSize(size, btn) {
+  selectedSize = size;
+  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('sizeError').style.display = 'none';
+}
+
+function toggleDetails(btn) {
+  btn.classList.toggle('open');
+  btn.nextElementSibling.classList.toggle('open');
+}
+
+function openLegal(key) {
+  const data = LEGAL[key];
+  document.getElementById('legalTitle').textContent = data.title;
+  document.getElementById('legalBody').innerHTML = data.body;
+  showPage('legal');
+}
+
+// ══════════════════════════════════════
+// CART
+// ══════════════════════════════════════
+function addToCart() {
+  if (!selectedSize) { document.getElementById('sizeError').style.display = 'block'; return; }
+  cart.push({ product: currentProduct, size: selectedSize });
+  updateCartUI();
+  showToast(currentProduct.name + ' (' + selectedSize + ') ajouté au panier');
+  setTimeout(openCart, 400);
+}
+
+function removeFromCart(i) { cart.splice(i, 1); updateCartUI(); renderCartPage(); }
+
+function updateCartUI() {
+  const countEl = document.getElementById('cartCount');
+  countEl.textContent = cart.length;
+  countEl.classList.toggle('visible', cart.length > 0);
+
+  const itemsEl = document.getElementById('cartItems');
+  const footerEl = document.getElementById('cartFooter');
+
+  if (cart.length === 0) {
+    itemsEl.innerHTML = `<div class="cart-empty"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><p>Ton panier est vide.</p></div>`;
+    footerEl.style.display = 'none'; return;
+  }
+  itemsEl.innerHTML = cart.map((item, i) => `
+    <div class="cart-item">
+      <div class="cart-item-img"><img src="${item.product.img}" alt="${item.product.name}"></div>
+      <div>
+        <p class="cart-item-name">${item.product.name}</p>
+        <p class="cart-item-size">Taille : ${item.size}</p>
+        <p class="cart-item-price">${item.product.price},00 €</p>
+        <button class="cart-item-remove" onclick="removeFromCart(${i})">Retirer</button>
+      </div>
+    </div>`).join('');
+  const total = cart.reduce((s, item) => s + item.product.price, 0);
+  document.getElementById('cartTotal').textContent = total.toFixed(2).replace('.', ',') + ' €';
+  footerEl.style.display = 'block';
+}
+
+function renderCartPage() {
+  const content = document.getElementById('cartPageContent');
+  const sub = document.getElementById('cartPageSub');
+  if (cart.length === 0) {
+    sub.textContent = '';
+    content.innerHTML = `<div class="cart-page-empty"><p>Ton panier est vide.</p><a href="#" onclick="showPage('home');setTimeout(()=>document.getElementById('collection').scrollIntoView({behavior:'smooth'}),50);return false">Voir la collection</a></div>`;
+    return;
+  }
+  const total = cart.reduce((s, item) => s + item.product.price, 0);
+  sub.textContent = cart.length + ' article' + (cart.length > 1 ? 's' : '');
+  content.innerHTML = `
+    <div class="cart-page-grid">
+      <div class="cart-page-items">
+        ${cart.map((item, i) => `
+          <div class="cart-page-item">
+            <div class="cart-page-item-img"><img src="${item.product.img}" alt="${item.product.name}"></div>
+            <div>
+              <p class="cart-page-item-name">${item.product.name}</p>
+              <p class="cart-page-item-size">Taille : ${item.size}</p>
+              <p class="cart-page-item-price">${item.product.price},00 €</p>
+            </div>
+            <button class="cart-page-item-remove" onclick="removeFromCart(${i});renderCartPage()">Retirer</button>
+          </div>`).join('')}
+      </div>
+      <div class="cart-summary">
+        <p class="cart-summary-title">Récapitulatif</p>
+        ${cart.map(item => `<div class="cart-summary-line"><span>${item.product.name} (${item.size})</span><span>${item.product.price},00 €</span></div>`).join('')}
+        <div class="cart-summary-line"><span>Livraison</span><span>Offerte</span></div>
+        <div class="cart-summary-total"><span>Total</span><span>${total.toFixed(2).replace('.', ',')} €</span></div>
+        <p class="cart-summary-note">Ton adresse de livraison sera renseignée directement sur la page de paiement sécurisée Stripe.</p>
+        <button class="cart-checkout-btn" id="checkoutBtnPage" onclick="checkout('page')">
+          <div class="checkout-spinner" id="checkoutSpinnerPage"></div>
+          Commander — Paiement sécurisé
+        </button>
+      </div>
+    </div>`;
+}
+
+// ══════════════════════════════════════
+// CHECKOUT
+// ══════════════════════════════════════
+async function checkout(source) {
+  const btnId = source === 'page' ? 'checkoutBtnPage' : 'checkoutBtnDrawer';
+  const spinnerId = source === 'page' ? 'checkoutSpinnerPage' : 'checkoutSpinnerDrawer';
+  const btn = document.getElementById(btnId);
+  const spinner = document.getElementById(spinnerId);
+  if (!btn) return;
+  btn.disabled = true;
+  if (spinner) spinner.style.display = 'block';
+  try {
+    const res = await fetch('/.netlify/functions/create-checkout', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        items: cart.map(item => ({ name: item.product.name, size: item.size, price: item.product.price })),
+        successUrl: window.location.origin + '/?commande=ok',
+        cancelUrl: window.location.origin,
+      }),
+    });
+    const data = await res.json();
+    if (data.url) { window.location.href = data.url; }
+    else { alert('Erreur lors du paiement. Réessaie.'); btn.disabled = false; if(spinner) spinner.style.display = 'none'; }
+  } catch (err) {
+    alert('Erreur réseau. Vérifie ta connexion.');
+    btn.disabled = false; if(spinner) spinner.style.display = 'none';
+  }
+}
+
+function openCart() {
+  document.getElementById('cartOverlay').classList.add('open');
+  document.getElementById('cartDrawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeCart() {
+  document.getElementById('cartOverlay').classList.remove('open');
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ══════════════════════════════════════
+// NEWSLETTER
+// ══════════════════════════════════════
+function handleNewsletter(e) {
+  e.preventDefault();
+  const form = e.target;
+  fetch('/', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: new URLSearchParams(new FormData(form)).toString(),
+  }).then(() => {
+    form.style.display = 'none';
+    document.getElementById('nlSuccess').style.display = 'block';
+  }).catch(() => {
+    document.getElementById('nlSuccess').style.display = 'block';
+  });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast'); t.textContent = msg;
+  t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// INIT
+renderGrid();
+updateCartUI();
+if(window.location.search.includes('commande=ok')) {
+  cart = []; updateCartUI();
+  showToast('Commande confirmée — Merci !');
+}
+</script>
+</body>
+</html>
