@@ -1,3 +1,6 @@
+const https = require('https');
+const querystring = require('querystring');
+
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
@@ -5,45 +8,54 @@ exports.handler = async (event) => {
 
   const { items, successUrl, cancelUrl } = JSON.parse(event.body);
 
-  // Construire les paramètres pour l'API Stripe
-  const params = new URLSearchParams();
-  params.append('mode', 'payment');
-  params.append('success_url', successUrl || 'https://ton-site.netlify.app/merci');
-  params.append('cancel_url', cancelUrl || 'https://ton-site.netlify.app');
-  params.append('locale', 'fr');
+  const params = {
+    mode: 'payment',
+    success_url: successUrl || 'https://sailortales.netlify.app/?commande=ok',
+    cancel_url: cancelUrl || 'https://sailortales.netlify.app',
+    locale: 'fr',
+    'shipping_address_collection[allowed_countries][0]': 'FR',
+  };
 
   items.forEach((item, i) => {
-    params.append(`line_items[${i}][price_data][currency]`, 'eur');
-    params.append(`line_items[${i}][price_data][product_data][name]`, `${item.name} — Taille ${item.size}`);
-    params.append(`line_items[${i}][price_data][product_data][description]`, 'Sailor Tales · Coton bio GOTS · Manches longues');
-    params.append(`line_items[${i}][price_data][unit_amount]`, String(item.price * 100)); // en centimes
-    params.append(`line_items[${i}][quantity]`, '1');
+    params[`line_items[${i}][price_data][currency]`] = 'eur';
+    params[`line_items[${i}][price_data][product_data][name]`] = `${item.name} — Taille ${item.size}`;
+    params[`line_items[${i}][price_data][product_data][description]`] = 'Sailor Tales · Coton bio GOTS · Manches longues';
+    params[`line_items[${i}][price_data][unit_amount]`] = String(item.price * 100);
+    params[`line_items[${i}][quantity]`] = '1';
   });
 
-  try {
-    const response = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+  const postData = querystring.stringify(params);
+
+  return new Promise((resolve) => {
+    const req = https.request({
+      hostname: 'api.stripe.com',
+      path: '/v1/checkout/sessions',
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${process.env.STRIPE_SECRET_KEY}`,
         'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': Buffer.byteLength(postData),
       },
-      body: params.toString(),
+    }, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        const session = JSON.parse(data);
+        if (session.error) {
+          resolve({ statusCode: 500, body: JSON.stringify({ error: session.error.message }) });
+        } else {
+          resolve({
+            statusCode: 200,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: session.url }),
+          });
+        }
+      });
     });
-
-    const session = await response.json();
-
-    if (session.error) {
-      console.error('Stripe error:', session.error);
-      return { statusCode: 500, body: JSON.stringify({ error: session.error.message }) };
-    }
-
-    return {
-      statusCode: 200,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url: session.url }),
-    };
-  } catch (err) {
-    console.error('Function error:', err);
-    return { statusCode: 500, body: JSON.stringify({ error: 'Erreur serveur' }) };
-  }
+    req.on('error', (err) => {
+      resolve({ statusCode: 500, body: JSON.stringify({ error: err.message }) });
+    });
+    req.write(postData);
+    req.end();
+  });
 };
