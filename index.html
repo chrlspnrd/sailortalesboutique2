@@ -136,6 +136,31 @@ nav.light-nav .nav-icon-btn:hover{color:var(--navy)}
 .details-content.open{max-height:300px}
 .details-content p{padding-bottom:1rem}
 
+/* ══ SIZE GUIDE ══ */
+.sg-toggle-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+.sg-toggle-btn{background:none;border:none;cursor:pointer;font-family:var(--fb);font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--navy2);display:flex;align-items:center;gap:.35rem;padding:0;transition:opacity .2s}
+.sg-toggle-btn:hover{opacity:.7}
+.sg-toggle-btn svg{transition:transform .3s}
+.sg-toggle-btn.open svg{transform:rotate(180deg)}
+.sg-panel{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.sg-panel.open{max-height:600px}
+.sg-inner{background:var(--gray-bg);padding:1.25rem;margin-bottom:.5rem}
+.sg-row-sliders{display:flex;flex-direction:column;gap:.85rem;margin-bottom:1rem}
+.sg-field label{font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:#888;display:flex;justify-content:space-between;margin-bottom:.35rem}
+.sg-field label span{color:var(--navy);font-weight:500;letter-spacing:0;text-transform:none;font-size:.78rem}
+.sg-field input[type=range]{width:100%;accent-color:var(--navy)}
+.sg-fit-row{display:flex;gap:.4rem;margin-bottom:1rem}
+.sg-fit-btn{flex:1;padding:.45rem .25rem;border:1px solid rgba(0,0,0,.15);background:none;font-family:var(--fb);font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;color:#888;transition:all .2s}
+.sg-fit-btn.active{background:var(--navy);color:var(--white);border-color:var(--navy)}
+.sg-result{display:flex;align-items:center;gap:1rem;border-top:1px solid rgba(0,0,0,.1);padding-top:1rem}
+.sg-size-badge{font-family:var(--fd);font-size:2.2rem;font-weight:300;color:var(--navy);min-width:52px}
+.sg-dims{display:flex;gap:.75rem;flex:1}
+.sg-dim{text-align:center;flex:1}
+.sg-dim-val{font-size:.85rem;font-weight:500;color:var(--black)}
+.sg-dim-lab{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:#aaa;margin-top:.15rem}
+.sg-warn{font-size:.72rem;color:#b0460e;background:#fff3ed;padding:.5rem .75rem;margin-top:.75rem;display:none;border-left:2px solid #b0460e}
+.sg-tip{font-size:.72rem;color:#888;line-height:1.6;margin-top:.75rem;font-style:italic;font-family:var(--fd)}
+
 /* CART DRAWER */
 .cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:300;opacity:0;pointer-events:none;transition:opacity .3s}
 .cart-overlay.open{opacity:1;pointer-events:all}
@@ -412,11 +437,55 @@ footer{background:var(--black);padding:4rem 3rem 2rem}
         <p class="product-eco-title">Pourquoi ce coton ?</p>
         <p id="productEco"></p>
       </div>
+
+      <!-- ══ SIZE GUIDE ══ -->
       <div>
-        <span class="size-label">Choisir une taille</span>
+        <div class="sg-toggle-row">
+          <span class="size-label" style="margin-bottom:0">Choisir une taille</span>
+          <button class="sg-toggle-btn" id="sgToggleBtn" onclick="toggleSizeGuide()">
+            Guide des tailles
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </div>
+
+        <div class="sg-panel" id="sgPanel">
+          <div class="sg-inner">
+            <div class="sg-row-sliders">
+              <div class="sg-field">
+                <label>Taille <span id="sgHeightOut">177 cm</span></label>
+                <input type="range" id="sgHeight" min="155" max="200" value="177" step="1" oninput="sgUpdate()">
+              </div>
+              <div class="sg-field">
+                <label>Poids <span id="sgWeightOut">72 kg</span></label>
+                <input type="range" id="sgWeight" min="45" max="120" value="72" step="1" oninput="sgUpdate()">
+              </div>
+              <div class="sg-field">
+                <label>Tour de poitrine <span id="sgChestOut">96 cm</span></label>
+                <input type="range" id="sgChest" min="80" max="125" value="96" step="1" oninput="sgUpdate()">
+              </div>
+            </div>
+            <div class="sg-fit-row">
+              <button class="sg-fit-btn" id="sgFitSlim" onclick="sgSetFit('slim')">Slim</button>
+              <button class="sg-fit-btn active" id="sgFitRegular" onclick="sgSetFit('regular')">Regular</button>
+              <button class="sg-fit-btn" id="sgFitOversized" onclick="sgSetFit('oversized')">Oversized</button>
+            </div>
+            <div class="sg-result">
+              <div class="sg-size-badge" id="sgRecommended">M</div>
+              <div class="sg-dims">
+                <div class="sg-dim"><div class="sg-dim-val" id="sgDimChest">—</div><div class="sg-dim-lab">½ poitrine</div></div>
+                <div class="sg-dim"><div class="sg-dim-val" id="sgDimBody">—</div><div class="sg-dim-lab">Longueur</div></div>
+                <div class="sg-dim"><div class="sg-dim-val" id="sgDimSleeve">—</div><div class="sg-dim-lab">Manche</div></div>
+              </div>
+            </div>
+            <div class="sg-warn" id="sgWarn"></div>
+            <p class="sg-tip" id="sgTip">En cas de doute entre deux tailles, prends la plus grande.</p>
+          </div>
+        </div>
+
         <div class="size-options" id="sizeOptions"></div>
         <p class="size-error" id="sizeError">Veuillez choisir une taille.</p>
       </div>
+
       <button class="add-to-cart-btn" onclick="addToCart()">Ajouter au panier</button>
       <div class="details-block">
         <button class="details-toggle" onclick="toggleDetails(this)">Composition & détails<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="6 9 12 15 18 9"/></svg></button>
@@ -533,6 +602,77 @@ const LEGAL = {
 };
 
 // ══════════════════════════════════════
+// SIZE GUIDE
+// ══════════════════════════════════════
+const SG_SIZES = {
+  XS: { halfChest:47.5, body:65, sleeve:61.5 },
+  S:  { halfChest:49.5, body:69, sleeve:63 },
+  M:  { halfChest:53.5, body:73, sleeve:64.5 },
+  L:  { halfChest:56.5, body:76, sleeve:65 },
+  XL: { halfChest:59.5, body:77, sleeve:65.5 }
+};
+const SG_ORDER = ['XS','S','M','L','XL'];
+let sgFit = 'regular';
+
+function toggleSizeGuide() {
+  const panel = document.getElementById('sgPanel');
+  const btn = document.getElementById('sgToggleBtn');
+  panel.classList.toggle('open');
+  btn.classList.toggle('open');
+  if(panel.classList.contains('open')) sgUpdate();
+}
+
+function sgSetFit(f) {
+  sgFit = f;
+  ['slim','regular','oversized'].forEach(x => document.getElementById('sgFit'+x.charAt(0).toUpperCase()+x.slice(1)).classList.remove('active'));
+  document.getElementById('sgFit'+f.charAt(0).toUpperCase()+f.slice(1)).classList.add('active');
+  sgUpdate();
+}
+
+function sgUpdate() {
+  const h = parseInt(document.getElementById('sgHeight').value);
+  const w = parseInt(document.getElementById('sgWeight').value);
+  const c = parseInt(document.getElementById('sgChest').value);
+  document.getElementById('sgHeightOut').textContent = h + ' cm';
+  document.getElementById('sgWeightOut').textContent = w + ' kg';
+  document.getElementById('sgChestOut').textContent  = c + ' cm';
+
+  let target = c / 2;
+  if(sgFit === 'slim') target -= 1;
+  else if(sgFit === 'oversized') target += 4;
+  else target += 2;
+
+  let best = 'M', bestDiff = 999;
+  SG_ORDER.forEach(sz => {
+    const d = Math.abs(SG_SIZES[sz].halfChest - target);
+    if(d < bestDiff){ bestDiff = d; best = sz; }
+  });
+
+  const warn = document.getElementById('sgWarn');
+  if(target > SG_SIZES['XL'].halfChest + 2) {
+    warn.style.display = 'block';
+    warn.textContent = 'Ton gabarit dépasse notre XL — contacte-nous avant de commander.';
+  } else if(target < SG_SIZES['XS'].halfChest - 1) {
+    warn.style.display = 'block';
+    warn.textContent = 'Ton gabarit est en dessous de notre XS — contacte-nous avant de commander.';
+  } else {
+    warn.style.display = 'none';
+  }
+
+  document.getElementById('sgRecommended').textContent = best;
+  document.getElementById('sgDimChest').textContent  = SG_SIZES[best].halfChest + ' cm';
+  document.getElementById('sgDimBody').textContent   = SG_SIZES[best].body + ' cm';
+  document.getElementById('sgDimSleeve').textContent = SG_SIZES[best].sleeve + ' cm';
+
+  const tips = {
+    slim:      'Coupe slim : suit le corps. Si ta poitrine est forte, monte d\'une taille.',
+    regular:   'En cas de doute entre deux tailles, prends la plus grande.',
+    oversized: 'Coupe oversized : tombé large et bas. Monte d\'une taille pour un rendu très ample.'
+  };
+  document.getElementById('sgTip').textContent = tips[sgFit];
+}
+
+// ══════════════════════════════════════
 // STATE
 // ══════════════════════════════════════
 let cart = [];
@@ -600,6 +740,12 @@ function openProduct(id) {
     `<button class="size-btn" onclick="selectSize('${s}',this)">${s}</button>`).join('');
   document.querySelectorAll('.details-toggle').forEach(t => t.classList.remove('open'));
   document.querySelectorAll('.details-content').forEach(c => c.classList.remove('open'));
+  // Reset size guide
+  document.getElementById('sgPanel').classList.remove('open');
+  document.getElementById('sgToggleBtn').classList.remove('open');
+  sgFit = 'regular';
+  ['slim','regular','oversized'].forEach(x => document.getElementById('sgFit'+x.charAt(0).toUpperCase()+x.slice(1)).classList.remove('active'));
+  document.getElementById('sgFitRegular').classList.add('active');
   showPage('product');
 }
 
